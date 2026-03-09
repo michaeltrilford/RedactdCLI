@@ -1,0 +1,25 @@
+{
+  "persona": {
+    "id": "product-manager-hat",
+    "name": "Product Manager Hat",
+    "type": "Stakeholder Hat",
+    "role": "Product prioritization lens"
+  },
+  "task": "Review the flow and determine whether the primary task can be completed clearly and confidently.",
+  "pagesReviewed": [
+    "01-pricing.json"
+  ],
+  "taskSuccess": true,
+  "csat": 7.2,
+  "frictionScore": 3,
+  "clarityScore": 8,
+  "frictionPoints": [
+    "No major friction was obvious from the artifact structure alone."
+  ],
+  "confusionPoints": [
+    "No major confusion point was obvious from the artifact structure alone."
+  ],
+  "recommendations": [
+    "The flow appears structurally coherent at a high level; validate this with deeper review."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "projectPath": "/Users/michaeltrilford/Github/RedactdCLI/examples/project",
+  "pages": [
+    {
+      "fileName": "01-pricing.json",
+      "totalNodes": 7,
+      "componentCounts": {
+        "Container": 1,
+        "VStack": 1,
+        "Heading": 2,
+        "Body": 1,
+        "Card": 1,
+        "Button": 1
+      }
+    }
+  ],
+  "personas": [
+    {
+      "id": "cost-conscious-impatient",
+      "name": "Nora Pricewatch",
+      "type": "User",
+      "taskSuccess": true,
+      "csat": 7,
+      "frictionScore": 3,
+      "clarityScore": 8
+    }
+  ]
+}

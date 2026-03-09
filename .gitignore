@@ -35,8 +35,8 @@ tmp/
 temp/
 *.tmp
 
-# Generated reports / runs
-runs/
+# Generated reports / testing outputs
+testing/
 output/
 
 # Local planning docs

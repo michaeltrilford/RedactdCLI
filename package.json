@@ -1,0 +1,17 @@
+{
+  "name": "redactd-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first CLI for evaluating Redactd-saved Design Canvas page JSON.",
+  "type": "module",
+  "bin": {
+    "redactd": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node ./src/cli.js",
+    "test:sample": "node ./src/cli.js test ./examples/project"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
