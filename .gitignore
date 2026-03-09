@@ -39,5 +39,10 @@ temp/
 runs/
 output/
 
+# Local planning docs
+PRD.md
+TASKLIST.md
+THEME.md
+
 # OS / misc
 Thumbs.db
