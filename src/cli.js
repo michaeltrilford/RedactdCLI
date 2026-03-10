@@ -334,6 +334,11 @@ async function choosePersonaScope(colors) {
         value: 'stakeholders',
         label: 'Stakeholder hats only',
         description: 'Internal review lenses only.'
+      },
+      {
+        value: '__back__',
+        label: 'Back',
+        description: 'Choose a different project.'
       }
     ]
   });
@@ -405,10 +410,16 @@ async function runTest(projectPathArg, flags) {
 
   const project = await loadProject(projectPath);
   const allPersonas = await loadPersonas(personaDir, []);
-  const selectedPersonaIds =
-    flags.personaIds.length > 0
-      ? flags.personaIds
-      : filterPersonaIdsByScope(allPersonas, await choosePersonaScope(colors));
+  let selectedPersonaIds = flags.personaIds;
+
+  if (selectedPersonaIds.length === 0) {
+    const scope = await choosePersonaScope(colors);
+    if (scope === '__back__') {
+      return { action: 'back' };
+    }
+    selectedPersonaIds = filterPersonaIdsByScope(allPersonas, scope);
+  }
+
   const personas = allPersonas.filter((persona) => selectedPersonaIds.includes(persona.id));
 
   if (personas.length === 0) {
@@ -463,7 +474,7 @@ async function runTest(projectPathArg, flags) {
       console.log(colors.warning(`Skipped ${failures.length} personas due to provider output issues.`));
     }
     console.log(colors.info(`Output written to ${runDir}`));
-    return;
+    return { action: 'completed', runDir };
   }
 }
 
@@ -476,18 +487,26 @@ async function main() {
 
   if (argv.length === 0) {
     const colors = createColors('dark');
-    const projectPath = await chooseProjectPath(colors);
-    if (!projectPath) {
+    for (;;) {
+      const projectPath = await chooseProjectPath(colors);
+      if (!projectPath) {
+        return;
+      }
+
+      const result = await runTest(projectPath, {
+        personasPath: null,
+        personaIds: [],
+        provider: null,
+        model: null,
+        theme: 'dark'
+      });
+
+      if (result?.action === 'back') {
+        continue;
+      }
+
       return;
     }
-    await runTest(projectPath, {
-      personasPath: null,
-      personaIds: [],
-      provider: null,
-      model: null,
-      theme: 'dark'
-    });
-    return;
   }
 
   const { command, projectPath, flags } = parseArgs(argv);
