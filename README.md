@@ -58,14 +58,6 @@ node ./src/cli.js critique /path/to/project/v1 --provider mock
 node ./src/cli.js iterate /path/to/project/v1 --provider openai
 ```
 
-## Project Files
-
-- [PRD.md](/Users/michaeltrilford/Github/RedactdCLI/PRD.md)
-- [TASKLIST.md](/Users/michaeltrilford/Github/RedactdCLI/TASKLIST.md)
-- [THEME.md](/Users/michaeltrilford/Github/RedactdCLI/THEME.md)
-- [personas/README.md](/Users/michaeltrilford/Github/RedactdCLI/personas/README.md)
-- [LICENSE](/Users/michaeltrilford/Github/RedactdCLI/LICENSE)
-
 ## License
 
 This repository is proprietary and is not open source.
