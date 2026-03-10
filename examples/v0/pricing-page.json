@@ -1,0 +1,457 @@
+{
+  "id": "root",
+  "type": "Root",
+  "props": {},
+  "children": [
+    {
+      "id": "canvas",
+      "type": "_Canvas",
+      "props": {},
+      "children": [
+        {
+          "id": "comp_10068-1773142526638-9547",
+          "type": "Container",
+          "props": {
+            "center": true,
+            "size": "large",
+            "style": "padding-top: var(--space-800)"
+          },
+          "children": [
+            {
+              "id": "comp_10069-1773142526638-7279",
+              "type": "VStack",
+              "props": {
+                "space": "var(--space-700)",
+                "alignX": "stretch"
+              },
+              "children": [
+                {
+                  "id": "comp_10070-1773142526638-3183",
+                  "type": "VStack",
+                  "props": {
+                    "space": "var(--space-100)",
+                    "alignX": "center"
+                  },
+                  "children": [
+                    {
+                      "id": "comp_10071-1773142526638-2248",
+                      "type": "Heading",
+                      "props": {
+                        "level": "1",
+                        "size": "1",
+                        "text": "Choose Your Plan"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "comp_10072-1773142526638-8669",
+                      "type": "Body",
+                      "props": {
+                        "text": "Select the perfect plan for your needs"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "comp_10073-1773142526638-4780",
+                  "type": "Grid",
+                  "props": {
+                    "col": "1fr 1fr 1fr",
+                    "space": "var(--space-500)"
+                  },
+                  "children": [
+                    {
+                      "id": "comp_10074-1773142526638-9065",
+                      "type": "Card",
+                      "props": {},
+                      "children": [
+                        {
+                          "id": "comp_10075-1773142526638-8747",
+                          "type": "CardHeader",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10076-1773142526638-7582",
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10077-1773142526638-8902",
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "3",
+                                    "size": "3",
+                                    "text": "Free"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10078-1773142526638-486",
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "2",
+                                    "size": "2",
+                                    "text": "$0.00/mo"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "comp_10079-1773142526638-2197",
+                          "type": "CardBody",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10080-1773142526638-8468",
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10081-1773142526638-6899",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Built-in component library"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10082-1773142526638-9762",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Layout tools"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10083-1773142526638-6117",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ UI patterns & guidelines"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10084-1773142526638-7052",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Static HTML export"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "comp_10085-1773142526638-80",
+                          "type": "Rule",
+                          "props": {
+                            "length": "100%",
+                            "weight": "1px",
+                            "direction": "horizontal"
+                          },
+                          "children": []
+                        },
+                        {
+                          "id": "comp_10086-1773142526638-2505",
+                          "type": "CardFooter",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10087-1773142526638-8815",
+                              "type": "VStack",
+                              "props": {
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10088-1773142526638-7680",
+                                  "type": "Button",
+                                  "props": {
+                                    "variant": "secondary",
+                                    "text": "Go to Builder"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "comp_10089-1773142526638-1811",
+                      "type": "Card",
+                      "props": {},
+                      "children": [
+                        {
+                          "id": "comp_10090-1773142526638-8261",
+                          "type": "CardHeader",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10091-1773142526638-7392",
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10092-1773142526638-8246",
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "3",
+                                    "size": "3",
+                                    "text": "Starter"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10093-1773142526638-5852",
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "2",
+                                    "size": "2",
+                                    "text": "$7.99/mo"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "comp_10094-1773142526638-2817",
+                          "type": "CardBody",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10095-1773142526638-1828",
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10096-1773142526638-243",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Everything in Free"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10097-1773142526638-6285",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ 1 Design System"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10098-1773142526638-9359",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Hide adverts + featured systems"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10099-1773142526638-673",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Per-component guidelines"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "comp_10100-1773142526638-3433",
+                          "type": "Rule",
+                          "props": {
+                            "length": "100%",
+                            "weight": "1px",
+                            "direction": "horizontal"
+                          },
+                          "children": []
+                        },
+                        {
+                          "id": "comp_10101-1773142526638-1963",
+                          "type": "CardFooter",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10102-1773142526638-8367",
+                              "type": "VStack",
+                              "props": {
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10103-1773142526638-3828",
+                                  "type": "Button",
+                                  "props": {
+                                    "variant": "secondary",
+                                    "text": "Subscribe"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "comp_10104-1773142526638-4880",
+                      "type": "Card",
+                      "props": {},
+                      "children": [
+                        {
+                          "id": "comp_10105-1773142526638-9216",
+                          "type": "CardHeader",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10106-1773142526638-1175",
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10107-1773142526638-5019",
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "3",
+                                    "size": "3",
+                                    "text": "Professional"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10108-1773142526638-127",
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "2",
+                                    "size": "2",
+                                    "text": "$14.99/mo"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "comp_10109-1773142526638-8517",
+                          "type": "CardBody",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10110-1773142526638-3845",
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10111-1773142526638-8845",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Everything in Starter"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10112-1773142526638-1282",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Unlimited design systems"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10113-1773142526638-3311",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Unlimited CDN resources"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "id": "comp_10114-1773142526638-7866",
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ AI integration"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "comp_10115-1773142526638-816",
+                          "type": "Rule",
+                          "props": {
+                            "length": "100%",
+                            "weight": "1px",
+                            "direction": "horizontal"
+                          },
+                          "children": []
+                        },
+                        {
+                          "id": "comp_10116-1773142526638-2689",
+                          "type": "CardFooter",
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "comp_10117-1773142526638-569",
+                              "type": "VStack",
+                              "props": {
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "id": "comp_10118-1773142526638-8141",
+                                  "type": "Button",
+                                  "props": {
+                                    "variant": "secondary",
+                                    "text": "Subscribe"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
