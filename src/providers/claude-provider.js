@@ -1,4 +1,4 @@
-import { systemPrompt, userPrompt } from '../prompt.js';
+import { iterationSystemPrompt, iterationUserPrompt, systemPrompt, userPrompt } from '../prompt.js';
 import { ProviderAuthError } from './errors.js';
 import { parseProviderJson } from './parse-json.js';
 
@@ -17,7 +17,7 @@ export class ClaudeProvider {
     this.model = model;
   }
 
-  async evaluate(input) {
+  async requestJson(systemText, userText) {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -27,9 +27,9 @@ export class ClaudeProvider {
       },
       body: JSON.stringify({
         model: this.model,
-        max_tokens: 1200,
-        system: systemPrompt(),
-        messages: [{ role: 'user', content: userPrompt(input) }]
+        max_tokens: 1800,
+        system: systemText,
+        messages: [{ role: 'user', content: userText }]
       })
     });
 
@@ -46,5 +46,13 @@ export class ClaudeProvider {
       throw new Error('Claude response missing JSON text');
     }
     return parseProviderJson(text);
+  }
+
+  async evaluate(input) {
+    return await this.requestJson(systemPrompt(), userPrompt(input));
+  }
+
+  async iterate(input) {
+    return await this.requestJson(iterationSystemPrompt(), iterationUserPrompt(input));
   }
 }

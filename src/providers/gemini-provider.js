@@ -1,4 +1,4 @@
-import { systemPrompt, userPrompt } from '../prompt.js';
+import { iterationSystemPrompt, iterationUserPrompt, systemPrompt, userPrompt } from '../prompt.js';
 import { ProviderAuthError } from './errors.js';
 import { parseProviderJson } from './parse-json.js';
 
@@ -18,7 +18,7 @@ export class GeminiProvider {
     this.model = model;
   }
 
-  async evaluate(input) {
+  async requestJson(systemText, userText) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`;
     const res = await fetch(url, {
       method: 'POST',
@@ -27,12 +27,12 @@ export class GeminiProvider {
       },
       body: JSON.stringify({
         systemInstruction: {
-          parts: [{ text: systemPrompt() }]
+          parts: [{ text: systemText }]
         },
         contents: [
           {
             role: 'user',
-            parts: [{ text: userPrompt(input) }]
+            parts: [{ text: userText }]
           }
         ]
       })
@@ -51,5 +51,13 @@ export class GeminiProvider {
       throw new Error('Gemini response missing JSON text');
     }
     return parseProviderJson(text);
+  }
+
+  async evaluate(input) {
+    return await this.requestJson(systemPrompt(), userPrompt(input));
+  }
+
+  async iterate(input) {
+    return await this.requestJson(iterationSystemPrompt(), iterationUserPrompt(input));
   }
 }

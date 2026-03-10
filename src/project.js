@@ -15,10 +15,8 @@ function validateRootShape(filePath, value) {
     throw new Error(`Invalid page JSON in ${filePath}: missing _Canvas wrapper`);
   }
 
-  if (canvasNode.children.length !== 1) {
-    throw new Error(
-      `Invalid page JSON in ${filePath}: phase 1 expects exactly one page root under _Canvas`
-    );
+  if (canvasNode.children.length === 0) {
+    throw new Error(`Invalid page JSON in ${filePath}: _Canvas does not contain any page nodes`);
   }
 
   return {
@@ -26,7 +24,16 @@ function validateRootShape(filePath, value) {
     fileName: path.basename(filePath),
     wrapperType: value.type,
     canvasType: canvasNode.type,
-    rootNode: canvasNode.children[0]
+    canvasChildren: canvasNode.children,
+    rootNode:
+      canvasNode.children.length === 1
+        ? canvasNode.children[0]
+        : {
+            id: `${path.basename(filePath, path.extname(filePath))}::canvas-group`,
+            type: 'CanvasGroup',
+            props: {},
+            children: canvasNode.children
+          }
   };
 }
 

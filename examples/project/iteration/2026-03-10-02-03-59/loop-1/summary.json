@@ -1,0 +1,84 @@
+{
+  "loopNumber": 1,
+  "summary": "Loop 1 focuses on the strongest critique themes and preserves the current overall flow.",
+  "changes": [
+    "Loop 1 change 1: tighten clarity around the primary path."
+  ],
+  "retained": [
+    "Preserve the page order and existing component structure where possible."
+  ],
+  "risks": [
+    "Updated copy and hierarchy should be reviewed against the original product intent.",
+    "Generated changes still need human verification before replacing a saved version."
+  ],
+  "pages": [
+    {
+      "fileName": "01-pricing.json",
+      "canvasChildren": [
+        {
+          "id": "pricing-page",
+          "type": "Container",
+          "props": {
+            "center": true,
+            "size": "large"
+          },
+          "children": [
+            {
+              "id": "hero-stack",
+              "type": "VStack",
+              "props": {
+                "space": "var(--space-400)"
+              },
+              "children": [
+                {
+                  "id": "heading-1",
+                  "type": "Heading",
+                  "props": {
+                    "level": "1",
+                    "size": "1",
+                    "text": "Choose your plan"
+                  },
+                  "children": []
+                },
+                {
+                  "id": "body-1",
+                  "type": "Body",
+                  "props": {
+                    "text": "See pricing before you continue."
+                  },
+                  "children": []
+                },
+                {
+                  "id": "card-1",
+                  "type": "Card",
+                  "props": {},
+                  "children": [
+                    {
+                      "id": "plan-price",
+                      "type": "Heading",
+                      "props": {
+                        "level": "2",
+                        "size": "2",
+                        "text": "$7.99 / month"
+                      },
+                      "children": []
+                    },
+                    {
+                      "id": "continue",
+                      "type": "Button",
+                      "props": {
+                        "variant": "primary",
+                        "text": "Continue securely"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { evaluatePersona } from './evaluator.js';
 import { createColors } from './colors.js';
+import { listCritiqueRuns, loadCritiqueRun, runIterationSession } from './iteration.js';
 import { filterPersonaIdsByScope, loadPersonas } from './personas.js';
 import { passwordPrompt, pathPrompt, selectPrompt } from './interactive.js';
 import { ensureDir, writeJson } from './fs-utils.js';
@@ -16,13 +17,15 @@ function printHelp() {
   console.log(`Redactd CLI
 
 Usage
+  redactd critique <project-path> [--personas <path>] [--persona <id>] [--provider <name>] [--model <name>] [--theme dark|light|auto]
+  redactd iterate <project-path> [--provider <name>] [--model <name>] [--theme dark|light|auto]
   redactd test <project-path> [--personas <path>] [--persona <id>] [--provider <name>] [--model <name>] [--theme dark|light|auto]
 
 Examples
-  redactd test ./examples/project
-  redactd test ./project --personas ./project/personas
-  redactd test ./project --persona cost-conscious-impatient
-  redactd test ./project --provider openai
+  redactd critique ./examples/project
+  redactd critique ./project --personas ./project/personas
+  redactd critique ./project --persona cost-conscious-impatient
+  redactd iterate ./project --provider openai
 
 Providers
   ${providerNames.join(', ')}
@@ -115,6 +118,26 @@ async function hasMarkdownFiles(dirPath) {
   }
 }
 
+function isVersionFolderName(name) {
+  return /^v\d+$/i.test(name);
+}
+
+function compareVersionNamesDescending(a, b) {
+  return Number.parseInt(b.slice(1), 10) - Number.parseInt(a.slice(1), 10);
+}
+
+async function listVersionFolders(projectRoot) {
+  try {
+    const entries = await readdir(projectRoot, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isDirectory() && isVersionFolderName(entry.name))
+      .map((entry) => entry.name)
+      .sort(compareVersionNamesDescending);
+  } catch {
+    return [];
+  }
+}
+
 async function confirmPrompt(colors, title, subtitle) {
   return await selectPrompt({
     colors,
@@ -127,24 +150,12 @@ async function confirmPrompt(colors, title, subtitle) {
   });
 }
 
-async function ensureProjectFolder(colors, projectPath) {
-  if (await pathExists(projectPath)) {
-    return projectPath;
-  }
+async function scaffoldVersionFolder(versionPath) {
+  await ensureDir(versionPath);
+  await ensureDir(path.join(versionPath, 'critique'));
+  await ensureDir(path.join(versionPath, 'iteration'));
 
-  const shouldCreate = await confirmPrompt(
-    colors,
-    'Create project folder?',
-    `${projectPath} does not exist yet.`
-  );
-
-  if (!shouldCreate) {
-    return null;
-  }
-
-  await ensureDir(projectPath);
-
-  await writeJson(path.join(projectPath, '01-sample-page.json'), {
+  await writeJson(path.join(versionPath, '01-sample-page.json'), {
     id: 'root',
     type: 'Root',
     props: {},
@@ -204,9 +215,86 @@ async function ensureProjectFolder(colors, projectPath) {
       }
     ]
   });
+}
 
-  console.log(colors.success(`Created project folder at ${projectPath}`));
-  console.log(colors.info('Added a starter page JSON to the project folder.'));
+async function chooseVersionFolder(colors, projectRoot, versionNames) {
+  const selected = await selectPrompt({
+    colors,
+    title: 'Choose a version',
+    subtitle: 'Each version keeps design files with critique and iteration outputs.',
+    options: [
+      ...versionNames.map((name) => ({
+        value: path.join(projectRoot, name),
+        label: name,
+        description: `${path.join(projectRoot, name)}`
+      })),
+      {
+        value: '__create__',
+        label: 'Create new version',
+        description: 'Start a fresh version folder in this project.'
+      },
+      {
+        value: '__back__',
+        label: 'Back',
+        description: 'Choose a different project.'
+      }
+    ]
+  });
+
+  if (selected === '__back__') {
+    return { action: 'back' };
+  }
+
+  if (selected === '__create__') {
+    const nextNumber =
+      versionNames.length === 0
+        ? 0
+        : Math.max(...versionNames.map((name) => Number.parseInt(name.slice(1), 10))) + 1;
+    const nextVersionName = `v${nextNumber}`;
+    const versionPath = path.join(projectRoot, nextVersionName);
+    await scaffoldVersionFolder(versionPath);
+    console.log(colors.success(`Created ${nextVersionName} at ${versionPath}`));
+    return { action: 'selected', versionPath };
+  }
+
+  return { action: 'selected', versionPath: selected };
+}
+
+async function ensureProjectFolder(colors, projectPath) {
+  const exists = await pathExists(projectPath);
+
+  if (!exists) {
+    const shouldCreate = await confirmPrompt(
+      colors,
+      'Create project folder?',
+      `${projectPath} does not exist yet.`
+    );
+
+    if (!shouldCreate) {
+      return null;
+    }
+
+    await ensureDir(projectPath);
+    const versionPath = path.join(projectPath, 'v0');
+    await scaffoldVersionFolder(versionPath);
+
+    console.log(colors.success(`Created project folder at ${projectPath}`));
+    console.log(colors.info(`Added versioned workspace at ${versionPath}.`));
+    return versionPath;
+  }
+
+  const projectName = path.basename(projectPath);
+  if (isVersionFolderName(projectName)) {
+    await ensureDir(path.join(projectPath, 'critique'));
+    await ensureDir(path.join(projectPath, 'iteration'));
+    return projectPath;
+  }
+
+  const versionNames = await listVersionFolders(projectPath);
+  if (versionNames.length > 0) {
+    return await chooseVersionFolder(colors, projectPath, versionNames);
+  }
+
   return projectPath;
 }
 
@@ -344,6 +432,87 @@ async function choosePersonaScope(colors) {
   });
 }
 
+async function chooseMode(colors) {
+  return await selectPrompt({
+    colors,
+    title: 'Choose a mode',
+    subtitle: 'Critique the current version or act on saved critique feedback.',
+    options: [
+      {
+        value: 'critique',
+        label: 'Critique',
+        description: 'Review the current saved design flow.'
+      },
+      {
+        value: 'iterate',
+        label: 'Iterate',
+        description: 'Use a saved critique to generate revision loops.'
+      },
+      {
+        value: 'critique-and-iterate',
+        label: 'Critique and Iterate',
+        description: 'Run a fresh critique, then move into iteration loops.'
+      },
+      {
+        value: '__back__',
+        label: 'Back',
+        description: 'Choose a different version.'
+      }
+    ]
+  });
+}
+
+async function chooseCritiqueRun(colors, projectPath) {
+  const runNames = await listCritiqueRuns(projectPath);
+  if (runNames.length === 0) {
+    throw new Error(`No saved critique runs found in ${path.join(projectPath, 'critique')}`);
+  }
+
+  const selected = await selectPrompt({
+    colors,
+    title: 'Choose a critique',
+    subtitle: 'Iteration uses a saved critique as its source input.',
+    options: [
+      ...runNames.map((runName) => ({
+        value: runName,
+        label: runName
+      })),
+      {
+        value: '__back__',
+        label: 'Back',
+        description: 'Choose a different mode.'
+      }
+    ]
+  });
+
+  return selected;
+}
+
+async function chooseIterationDepth(colors) {
+  return await selectPrompt({
+    colors,
+    title: 'Choose iteration depth',
+    subtitle: 'Save each loop separately in the iteration folder.',
+    options: [
+      {
+        value: 2,
+        label: 'Two loops',
+        description: 'Save loop 1 and loop 2.'
+      },
+      {
+        value: 1,
+        label: 'One loop',
+        description: 'Save a single revision pass.'
+      },
+      {
+        value: '__back__',
+        label: 'Back',
+        description: 'Choose a different critique.'
+      }
+    ]
+  });
+}
+
 async function chooseProjectPath(colors) {
   const documentsRedactd = '~/Documents/Redactd';
   const iCloudRedactd = '~/iCloud/Redactd';
@@ -389,7 +558,7 @@ async function chooseProjectPath(colors) {
   return await ensureProjectFolder(colors, customPath);
 }
 
-async function runTest(projectPathArg, flags) {
+async function runCritique(projectPathArg, flags) {
   if (!projectPathArg) {
     throw new Error('Missing project path');
   }
@@ -466,7 +635,8 @@ async function runTest(projectPathArg, flags) {
       throw new Error('All persona evaluations failed.');
     }
 
-    const runDir = await writeRun(project, reports, path.join(projectPath, 'testing'));
+    await ensureDir(path.join(projectPath, 'critique'));
+    const runDir = await writeRun(project, reports, path.join(projectPath, 'critique'));
 
     console.log(colors.success(`Validated ${project.pages.length} page files.`));
     console.log(colors.success(`Evaluated ${reports.length} personas.`));
@@ -476,6 +646,53 @@ async function runTest(projectPathArg, flags) {
     console.log(colors.info(`Output written to ${runDir}`));
     return { action: 'completed', runDir };
   }
+}
+
+async function runIterate(projectPathArg, flags, selectedRunName = null, selectedLoops = null) {
+  if (!projectPathArg) {
+    throw new Error('Missing project path');
+  }
+
+  const projectPath = path.resolve(expandHome(projectPathArg));
+  const colors = createColors(flags.theme);
+  const project = await loadProject(projectPath);
+
+  let critiqueRunName = selectedRunName;
+  if (!critiqueRunName) {
+    critiqueRunName = await chooseCritiqueRun(colors, projectPath);
+    if (critiqueRunName === '__back__') {
+      return { action: 'back' };
+    }
+  }
+
+  let loops = selectedLoops;
+  if (!loops) {
+    loops = await chooseIterationDepth(colors);
+    if (loops === '__back__') {
+      return { action: 'back' };
+    }
+  }
+
+  const critique = await loadCritiqueRun(projectPath, critiqueRunName);
+  const provider = await resolveProvider(colors, flags);
+
+  console.log(colors.accent('Redactd CLI'));
+  console.log(colors.muted(`Project: ${projectPath}`));
+  console.log(colors.muted(`Critique: ${critique.runName}`));
+  console.log(colors.muted(`Provider: ${provider.name}${provider.model ? ` (${provider.model})` : ''}`));
+
+  const result = await runIterationSession({
+    project,
+    critique,
+    provider,
+    loops,
+    outputRoot: path.join(projectPath, 'iteration')
+  });
+
+  console.log(colors.success(`Loaded critique ${critique.runName}.`));
+  console.log(colors.success(`Saved ${result.loops.length} iteration loops.`));
+  console.log(colors.info(`Output written to ${result.sessionDir}`));
+  return { action: 'completed', sessionDir: result.sessionDir };
 }
 
 async function main() {
@@ -488,18 +705,46 @@ async function main() {
   if (argv.length === 0) {
     const colors = createColors('dark');
     for (;;) {
-      const projectPath = await chooseProjectPath(colors);
-      if (!projectPath) {
+    const projectSelection = await chooseProjectPath(colors);
+    if (!projectSelection) {
         return;
       }
 
-      const result = await runTest(projectPath, {
+      if (typeof projectSelection === 'object' && projectSelection.action === 'back') {
+        continue;
+      }
+
+      const projectPath =
+        typeof projectSelection === 'string'
+          ? projectSelection
+          : projectSelection.versionPath;
+
+      const baseFlags = {
         personasPath: null,
         personaIds: [],
         provider: null,
         model: null,
         theme: 'dark'
-      });
+      };
+
+      const mode = await chooseMode(colors);
+      if (mode === '__back__') {
+        continue;
+      }
+
+      let result;
+      if (mode === 'critique') {
+        result = await runCritique(projectPath, baseFlags);
+      } else if (mode === 'iterate') {
+        result = await runIterate(projectPath, baseFlags);
+      } else {
+        const critiqueResult = await runCritique(projectPath, baseFlags);
+        if (critiqueResult?.action === 'back') {
+          continue;
+        }
+        const runName = critiqueResult?.runDir ? path.basename(critiqueResult.runDir) : null;
+        result = await runIterate(projectPath, baseFlags, runName, 2);
+      }
 
       if (result?.action === 'back') {
         continue;
@@ -511,12 +756,17 @@ async function main() {
 
   const { command, projectPath, flags } = parseArgs(argv);
 
-  if (command !== 'test') {
+  if (!['test', 'critique', 'iterate'].includes(command)) {
     printHelp();
     throw new Error(`Unsupported command: ${command}`);
   }
 
-  await runTest(projectPath, flags);
+  if (command === 'iterate') {
+    await runIterate(projectPath, flags);
+    return;
+  }
+
+  await runCritique(projectPath, flags);
 }
 
 main().catch((error) => {

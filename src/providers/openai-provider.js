@@ -1,4 +1,4 @@
-import { systemPrompt, userPrompt } from '../prompt.js';
+import { iterationSystemPrompt, iterationUserPrompt, systemPrompt, userPrompt } from '../prompt.js';
 import { ProviderAuthError } from './errors.js';
 import { parseProviderJson } from './parse-json.js';
 
@@ -25,7 +25,7 @@ export class OpenAIProvider {
     this.model = model;
   }
 
-  async evaluate(input) {
+  async requestJson(systemText, userText) {
     const res = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
@@ -35,8 +35,8 @@ export class OpenAIProvider {
       body: JSON.stringify({
         model: this.model,
         input: [
-          { role: 'system', content: [{ type: 'input_text', text: systemPrompt() }] },
-          { role: 'user', content: [{ type: 'input_text', text: userPrompt(input) }] }
+          { role: 'system', content: [{ type: 'input_text', text: systemText }] },
+          { role: 'user', content: [{ type: 'input_text', text: userText }] }
         ]
       })
     });
@@ -54,5 +54,13 @@ export class OpenAIProvider {
       throw new Error('OpenAI response missing JSON text');
     }
     return parseProviderJson(text);
+  }
+
+  async evaluate(input) {
+    return await this.requestJson(systemPrompt(), userPrompt(input));
+  }
+
+  async iterate(input) {
+    return await this.requestJson(iterationSystemPrompt(), iterationUserPrompt(input));
   }
 }

@@ -17,6 +17,19 @@ function hasAnyTextMatch(pages, pattern) {
   return pages.some((page) => visit(page.rootNode));
 }
 
+function cloneNode(node) {
+  if (!node || typeof node !== 'object') return node;
+  return {
+    ...node,
+    props: { ...(node.props ?? {}) },
+    children: (node.children ?? []).map(cloneNode)
+  };
+}
+
+function cloneCanvasChildren(page) {
+  return (page.canvasChildren ?? [page.rootNode]).map(cloneNode);
+}
+
 export class MockProvider {
   constructor() {
     this.name = 'mock';
@@ -100,6 +113,29 @@ export class MockProvider {
       frictionPoints,
       confusionPoints,
       recommendations
+    };
+  }
+
+  async iterate({ project, critique, loopNumber, previousLoop }) {
+    const priorityActions = critique.topRecommendations.slice(0, 3);
+    const priorChanges = previousLoop?.changes ?? [];
+
+    return {
+      summary: `Loop ${loopNumber} focuses on the strongest critique themes and preserves the current overall flow.`,
+      changes: priorityActions.length > 0
+        ? priorityActions.map((item, index) => `Loop ${loopNumber} change ${index + 1}: ${item}`)
+        : [`Loop ${loopNumber} change 1: tighten clarity around the primary path.`],
+      retained: priorChanges.length > 0
+        ? priorChanges.slice(0, 2)
+        : ['Preserve the page order and existing component structure where possible.'],
+      risks: [
+        'Updated copy and hierarchy should be reviewed against the original product intent.',
+        'Generated changes still need human verification before replacing a saved version.'
+      ],
+      pages: project.pages.map((page) => ({
+        fileName: page.fileName,
+        canvasChildren: cloneCanvasChildren(page)
+      }))
     };
   }
 }
