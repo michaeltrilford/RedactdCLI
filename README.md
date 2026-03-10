@@ -1,31 +1,59 @@
 # Redactd CLI
 
-Redactd CLI is a local-first command-line tool for evaluating Redactd-saved Design Canvas page JSON.
+Redactd CLI is a local-first command-line tool for critiquing and iterating on Redactd-saved Design Canvas JSON.
 
-Phase 1 focuses on synthetic persona testing across ordered UI flows and writing structured reports locally.
+It reads saved version folders from disk, runs synthetic persona critique, and can generate iteration loops from a saved critique run.
 
 ## What It Does
 
-- scans folders of saved page JSON files
-- reads persona definitions from disk
-- evaluates flows screen by screen
-- generates structured usability feedback
-- saves reports locally
+- works against version folders like `v0`, `v1`, `v2`
+- critiques saved Redactd page JSON with built-in personas
+- saves critique output locally inside each version folder
+- generates iteration loops from existing critique data
+- writes local dashboards and structured JSON/Markdown artifacts
 
-## Phase 1 Scope
+## Modes
 
-The initial version is focused on:
+- `Critique`
+  Review the current saved version and write outputs into `critique/`
 
-- page JSON parsing
-- persona-based evaluation
-- local report generation
+- `Iterate`
+  Select a saved critique and generate looped iteration output into `iteration/`
 
-It does not yet aim to:
+- `Critique and Iterate`
+  Run a fresh critique, then feed it directly into iteration loops
 
-- replace human research
-- generate new UI artifacts
-- automate browsers
-- run full critique or iteration loops
+## Project Structure
+
+```text
+Redactd/
+  v0/
+    01-sample-page.json
+    critique/
+    iteration/
+
+  v1/
+    pricing-page.json
+    critique/
+    iteration/
+```
+
+Each version folder is the working unit. Design files and feedback stay grouped together.
+
+## Running
+
+From the repo root:
+
+```bash
+node ./src/cli.js
+```
+
+Or directly:
+
+```bash
+node ./src/cli.js critique /path/to/project/v1 --provider mock
+node ./src/cli.js iterate /path/to/project/v1 --provider openai
+```
 
 ## Project Files
 
@@ -47,4 +75,4 @@ Copying, redistributing, hosting, selling, or using this repository for commerci
 
 ## Status
 
-Early project setup and product definition.
+Working CLI with critique, iteration scaffolding, version-aware folder setup, and local HTML dashboards.
