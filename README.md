@@ -1,5 +1,8 @@
 # Redactd CLI
 
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ff69b4?logo=githubsponsors)](https://github.com/sponsors/michaeltrilford)
+![License](https://img.shields.io/badge/License-Commercial-0f172a?style=flat-square)
+
 Redactd CLI is a local-first command-line tool for critiquing and iterating on Redactd-saved Design Canvas JSON.
 
 It reads saved version folders from disk, runs synthetic persona critique, and can generate iteration loops from a saved critique run.

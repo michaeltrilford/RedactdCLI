@@ -525,6 +525,7 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
           </mui-v-stack>
         </section>
       </mui-loader>
+
     </mui-v-stack>
     </mui-container>
   </main>
