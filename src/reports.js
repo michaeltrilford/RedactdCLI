@@ -71,7 +71,7 @@ function escapeHtml(value) {
 
 function renderList(items) {
   return `<mui-list>${items
-    .map((item) => `<mui-list-item size="x-small">${escapeHtml(item)}</mui-list-item>`)
+    .map((item) => `<mui-list-item size="small">${escapeHtml(item)}</mui-list-item>`)
     .join("")}</mui-list>`;
 }
 
@@ -147,6 +147,7 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
               </mui-responsive>
 
               <mui-v-stack space="var(--space-400)">
+              
                 <mui-responsive breakpoint-low="599" breakpoint-high="1024">
                   <mui-v-stack slot="showBelow" class="score-row" space="var(--space-200)">
                     ${scoreMetrics}
@@ -158,6 +159,7 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
                     ${scoreMetrics}
                   </mui-grid>
                 </mui-responsive>
+
                 <mui-v-stack space="var(--space-000)">
                   <mui-body style="margin-bottom: var(--space-050);" size="small" weight="bold">Friction</mui-body>
                   ${renderList(report.frictionPoints)}
@@ -170,16 +172,28 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
                   <mui-body style="margin-bottom: var(--space-050);" size="small" weight="bold">Recommendations</mui-body>
                   ${renderList(report.recommendations)}
                 </mui-v-stack>
+
               </mui-v-stack>
 
-              <mui-h-stack class="links" space="var(--space-000)">
-                <mui-link variant="tertiary" size="small" href="./json/${encodeURIComponent(
-                  report.persona.id,
-                )}.json">JSON</mui-link>
-                <mui-link variant="tertiary" size="small" href="./md/${encodeURIComponent(
-                  report.persona.id,
-                )}.md">Markdown</mui-link>
-              </mui-h-stack>
+
+              <mui-responsive breakpoint="960">
+                <mui-h-stack slot="showAbove" class="links" space="var(--space-000)">
+                  <mui-link variant="tertiary" size="small" href="./json/${encodeURIComponent(
+                    report.persona.id,
+                  )}.json">JSON</mui-link>
+                  <mui-link variant="tertiary" size="small" href="./md/${encodeURIComponent(
+                    report.persona.id,
+                  )}.md">Markdown</mui-link>
+                </mui-h-stack>
+                <mui-v-stack slot="showBelow" class="links" space="var(--space-000)" alignX="stretch">
+                  <mui-link variant="tertiary" size="small" href="./json/${encodeURIComponent(
+                    report.persona.id,
+                  )}.json">JSON</mui-link>
+                  <mui-link variant="tertiary" size="small" href="./md/${encodeURIComponent(
+                    report.persona.id,
+                  )}.md">Markdown</mui-link>
+                </mui-v-stack>
+              </mui-responsive>
 
             </mui-v-stack>
           </mui-card-body>
@@ -260,52 +274,10 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
       font-family: ui-sans-serif, system-ui, sans-serif;
       background: var(--surface);
       color: var(--text-color);
-      opacity: 0;
-      animation: dashboard-fade-in 320ms ease-out forwards;
-    }
-
-    @keyframes dashboard-fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
 
     .hero {
       z-index: 1;
-    }
-
-    .hero,
-    .overview-grid > mui-card,
-    .pages,
-    .report-card {
-      opacity: 0;
-      animation: section-rise 420ms ease-out forwards;
-    }
-
-    .overview-grid > mui-card:nth-child(1) { animation-delay: 80ms; }
-    .overview-grid > mui-card:nth-child(2) { animation-delay: 120ms; }
-    .overview-grid > mui-card:nth-child(3) { animation-delay: 160ms; }
-    .overview-grid > mui-card:nth-child(4) { animation-delay: 200ms; }
-    .pages { animation-delay: 240ms; }
-    .report-card:nth-child(1) { animation-delay: 280ms; }
-    .report-card:nth-child(2) { animation-delay: 320ms; }
-    .report-card:nth-child(3) { animation-delay: 360ms; }
-    .report-card:nth-child(4) { animation-delay: 400ms; }
-
-    @keyframes section-rise {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
 
     .reports-grid,
@@ -317,6 +289,18 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
 
     .score-row {
       margin-bottom: var(--space-400);
+    }
+
+    .report-type {
+      margin-bottom: var(--space-200);
+      padding-bottom: var(--space-200);
+      border-bottom: var(--border-thin);
+    }
+
+    .links {
+      margin-top: var(--space-200);
+      padding-top: var(--space-200);
+      border-top: var(--border-thin);
     }
 
     mui-link::part(color) {
@@ -334,13 +318,11 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
       .report-type {
         margin-bottom: var(--space-400);
         padding-bottom: var(--space-400);
-        border-bottom: var(--border-thin);
       }
 
       .links {
         margin-top: var(--space-400);
         padding-top: var(--space-400);
-        border-top: var(--border-thin);
       }
     }
 
@@ -357,6 +339,12 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
       } else if (typeof query.addListener === "function") {
         query.addListener(applyTheme);
       }
+
+      const revealLoaders = () => {
+        document.querySelectorAll("mui-loader[data-dashboard-loader]").forEach((loader) => {
+          loader.removeAttribute("loading");
+        });
+      };
 
       const copyText = async (value) => {
         if (!value) return;
@@ -409,6 +397,18 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
           }
         }
       });
+
+      Promise.all([
+        customElements.whenDefined("mui-loader"),
+        customElements.whenDefined("mui-button"),
+        customElements.whenDefined("mui-dialog"),
+      ]).then(() => {
+        window.requestAnimationFrame(() => {
+          revealLoaders();
+        });
+      }).catch(() => {
+        revealLoaders();
+      });
     })();
   </script>
 </head>
@@ -416,41 +416,43 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
   <main>
     <mui-container large center>
     <mui-v-stack space="var(--space-600)">
-      <section class="hero">
-        <mui-h-stack alignx="space-between" aligny="center" space="var(--space-200)">
-          <mui-v-stack space="var(--space-000)">
-            <mui-heading level="1" size="2">Insights</mui-heading>
-            <mui-body size="small" variant="optional">
-              Persona feedback
-            </mui-body>
-          </mui-v-stack>
-          <mui-dropdown position="right" style="--dropdown-min-width: 20rem;">
-            <mui-button
-              slot="action"
-              variant="tertiary"
-              aria-label="Open dashboard menu"
-              title="Dashboard menu"
-            >
-              <mui-icon-ellipsis size="medium"></mui-icon-ellipsis>
-            </mui-button>
-            <mui-button
-              variant="tertiary"
-              dropdown-slot
-              dropdown-slot-first
-              data-copy-path="${escapeHtml(project.projectPath)}"
-            >
-              Copy Folder Path
-            </mui-button>
-            <mui-button
-              variant="tertiary"
-              dropdown-slot
-              data-open-dialog="stats-for-nerds"
-            >
-              Stats for Nerds
-            </mui-button>
-          </mui-dropdown>
-        </mui-h-stack>
-      </section>
+      <mui-loader data-dashboard-loader loading animation="fade-in">
+        <section class="hero">
+          <mui-h-stack alignx="space-between" aligny="center" space="var(--space-200)">
+            <mui-v-stack space="var(--space-000)">
+              <mui-heading level="1" size="2">Insights</mui-heading>
+              <mui-body size="small" variant="optional">
+                Persona feedback
+              </mui-body>
+            </mui-v-stack>
+            <mui-dropdown position="right" style="--dropdown-min-width: 20rem;">
+              <mui-button
+                slot="action"
+                variant="tertiary"
+                aria-label="Open dashboard menu"
+                title="Dashboard menu"
+              >
+                <mui-icon-ellipsis size="medium"></mui-icon-ellipsis>
+              </mui-button>
+              <mui-button
+                variant="tertiary"
+                dropdown-slot
+                dropdown-slot-first
+                data-copy-path="${escapeHtml(project.projectPath)}"
+              >
+                Copy Folder Path
+              </mui-button>
+              <mui-button
+                variant="tertiary"
+                dropdown-slot
+                data-open-dialog="stats-for-nerds"
+              >
+                Stats for Nerds
+              </mui-button>
+            </mui-dropdown>
+          </mui-h-stack>
+        </section>
+      </mui-loader>
 
       <mui-dialog
         data-dialog="stats-for-nerds"
@@ -466,57 +468,63 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
         </mui-v-stack>
       </mui-dialog>
 
-      <section class="overview">
-        <mui-responsive breakpoint="720">
-          <mui-grid slot="showBelow" class="overview-grid" space="var(--space-400)" col="1fr 1fr">
-            ${overviewCards}
-          </mui-grid>
-          <mui-grid slot="showAbove" class="overview-grid" space="var(--space-400)" col="1fr 1fr 1fr 1fr">
-            ${overviewCards}
-          </mui-grid>
-        </mui-responsive>
-      </section>
-
-      <section class="pages">
-        <mui-v-stack space="var(--space-400)">
-          <mui-heading level="2" size="3">Pages</mui-heading>
+      <mui-loader data-dashboard-loader loading animation="fade-in">
+        <section class="overview">
           <mui-responsive breakpoint="720">
-            <mui-v-stack slot="showBelow" class="page-cards" space="var(--space-400)">
-              ${pageCards}
-            </mui-v-stack>
-            <mui-card slot="showAbove">
-              <mui-card-body>
-                <mui-table class="page-table">
-                  <mui-row-group heading>
-                    <mui-row columns="${pageColumns}">
-                      <mui-cell>File</mui-cell>
-                      <mui-cell>Nodes</mui-cell>
-                      <mui-cell>Component</mui-cell>
-                    </mui-row>
-                  </mui-row-group>
-                  <mui-row-group>
-                    ${pageRows}
-                  </mui-row-group>
-                </mui-table>
-              </mui-card-body>
-            </mui-card>
-          </mui-responsive>
-        </mui-v-stack>
-      </section>
-
-      <section class="reports">
-        <mui-v-stack space="var(--space-400)">
-          <mui-heading level="2" size="3">Persona Reports</mui-heading>
-          <mui-responsive breakpoint="720">
-            <mui-v-stack slot="showBelow" class="reports-stack" space="var(--space-400)">
-              ${reportCards}
-            </mui-v-stack>
-            <mui-grid slot="showAbove" class="reports-grid" space="var(--space-400)" style="--grid-item-size: 320px;">
-              ${reportCards}
+            <mui-grid slot="showBelow" class="overview-grid" space="var(--space-400)" col="1fr 1fr">
+              ${overviewCards}
+            </mui-grid>
+            <mui-grid slot="showAbove" class="overview-grid" space="var(--space-400)" col="1fr 1fr 1fr 1fr">
+              ${overviewCards}
             </mui-grid>
           </mui-responsive>
-        </mui-v-stack>
-      </section>
+        </section>
+      </mui-loader>
+
+      <mui-loader data-dashboard-loader loading animation="fade-in">
+        <section class="pages">
+          <mui-v-stack space="var(--space-400)">
+            <mui-heading level="2" size="3">Pages</mui-heading>
+            <mui-responsive breakpoint="720">
+              <mui-v-stack slot="showBelow" class="page-cards" space="var(--space-400)">
+                ${pageCards}
+              </mui-v-stack>
+              <mui-card slot="showAbove">
+                <mui-card-body>
+                  <mui-table class="page-table">
+                    <mui-row-group heading>
+                      <mui-row columns="${pageColumns}">
+                        <mui-cell>File</mui-cell>
+                        <mui-cell>Nodes</mui-cell>
+                        <mui-cell>Component</mui-cell>
+                      </mui-row>
+                    </mui-row-group>
+                    <mui-row-group>
+                      ${pageRows}
+                    </mui-row-group>
+                  </mui-table>
+                </mui-card-body>
+              </mui-card>
+            </mui-responsive>
+          </mui-v-stack>
+        </section>
+      </mui-loader>
+
+      <mui-loader data-dashboard-loader loading animation="fade-in">
+        <section class="reports">
+          <mui-v-stack space="var(--space-400)">
+            <mui-heading level="2" size="3">Persona Reports</mui-heading>
+            <mui-responsive breakpoint="720">
+              <mui-v-stack slot="showBelow" class="reports-stack" space="var(--space-400)">
+                ${reportCards}
+              </mui-v-stack>
+              <mui-grid slot="showAbove" class="reports-grid" space="var(--space-400)" style="--grid-item-size: 320px;">
+                ${reportCards}
+              </mui-grid>
+            </mui-responsive>
+          </mui-v-stack>
+        </section>
+      </mui-loader>
     </mui-v-stack>
     </mui-container>
   </main>
