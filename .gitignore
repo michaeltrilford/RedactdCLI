@@ -38,10 +38,6 @@ temp/
 # Generated reports / testing outputs
 testing/
 output/
-critique/
-iteration/
-examples/project/critique/
-examples/project/iteration/
 examples/project/testing/
 
 # Local planning docs

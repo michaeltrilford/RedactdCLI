@@ -1,0 +1,31 @@
+{
+  "persona": {
+    "id": "international-non-native-reader",
+    "name": "Kenji Plainlanguage",
+    "type": "User",
+    "role": "Non-native English reader"
+  },
+  "task": "Review the flow and determine whether the primary task can be completed clearly and confidently.",
+  "provider": "groq",
+  "model": "llama-3.3-70b-versatile",
+  "pagesReviewed": [
+    "pricing-page.json"
+  ],
+  "taskSuccess": true,
+  "csat": 8,
+  "frictionScore": 6,
+  "clarityScore": 8,
+  "frictionPoints": [
+    "Some button text like 'Go to Builder' could be more literal for non-native English speakers",
+    "The difference between plans could be more clearly highlighted"
+  ],
+  "confusionPoints": [
+    "The 'Free' plan's features are not clearly distinguished from the paid plans",
+    "The 'UI patterns & guidelines' and 'per-component guidelines' features may require additional explanation for clarity"
+  ],
+  "recommendations": [
+    "Use simpler, more direct language in button text and feature descriptions",
+    "Consider adding a comparison table or clear plan differences section to facilitate easier plan selection",
+    "Provide additional context or explanations for technical terms and features that may be unfamiliar to non-native English speakers"
+  ]
+}

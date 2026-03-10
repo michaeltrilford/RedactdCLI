@@ -1,0 +1,415 @@
+{
+  "id": "root",
+  "type": "Root",
+  "props": {},
+  "children": [
+    {
+      "id": "canvas",
+      "type": "_Canvas",
+      "props": {},
+      "children": [
+        {
+          "type": "Container",
+          "props": {
+            "center": true,
+            "size": "large",
+            "style": "padding-top: var(--space-800)"
+          },
+          "children": [
+            {
+              "type": "VStack",
+              "props": {
+                "space": "var(--space-700)",
+                "alignX": "stretch"
+              },
+              "children": [
+                {
+                  "type": "VStack",
+                  "props": {
+                    "space": "var(--space-100)",
+                    "alignX": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "Heading",
+                      "props": {
+                        "level": "1",
+                        "size": "1",
+                        "text": "Choose Your Plan"
+                      },
+                      "children": []
+                    },
+                    {
+                      "type": "Body",
+                      "props": {
+                        "text": "Select the perfect plan for your needs"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "type": "Grid",
+                  "props": {
+                    "col": "1fr 1fr 1fr",
+                    "space": "var(--space-500)"
+                  },
+                  "children": [
+                    {
+                      "type": "Card",
+                      "props": {
+                        "aria-label": "Free Plan"
+                      },
+                      "children": [
+                        {
+                          "type": "CardHeader",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "3",
+                                    "size": "3",
+                                    "text": "Free"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "2",
+                                    "size": "2",
+                                    "text": "$0.00/mo"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CardBody",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Built-in component library"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Layout tools"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ UI patterns & guidelines"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Static HTML export"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Rule",
+                          "props": {
+                            "length": "100%",
+                            "weight": "1px",
+                            "direction": "horizontal"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "CardFooter",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Button",
+                                  "props": {
+                                    "variant": "primary",
+                                    "text": "Get Started",
+                                    "aria-label": "Start with Free Plan"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Card",
+                      "props": {
+                        "aria-label": "Starter Plan"
+                      },
+                      "children": [
+                        {
+                          "type": "CardHeader",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "3",
+                                    "size": "3",
+                                    "text": "Starter"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "2",
+                                    "size": "2",
+                                    "text": "$7.99/mo"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CardBody",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Everything in Free"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ 1 Design System"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Hide adverts + featured systems"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Per-component guidelines"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Rule",
+                          "props": {
+                            "length": "100%",
+                            "weight": "1px",
+                            "direction": "horizontal"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "CardFooter",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Button",
+                                  "props": {
+                                    "variant": "primary",
+                                    "text": "Subscribe",
+                                    "aria-label": "Subscribe to Starter Plan"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Card",
+                      "props": {
+                        "aria-label": "Professional Plan"
+                      },
+                      "children": [
+                        {
+                          "type": "CardHeader",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "3",
+                                    "size": "3",
+                                    "text": "Professional"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Heading",
+                                  "props": {
+                                    "level": "2",
+                                    "size": "2",
+                                    "text": "$14.99/mo"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "CardBody",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "space": "var(--space-200)",
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Everything in Starter"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Unlimited design systems"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ Unlimited CDN resources"
+                                  },
+                                  "children": []
+                                },
+                                {
+                                  "type": "Body",
+                                  "props": {
+                                    "text": "✓ AI integration"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "Rule",
+                          "props": {
+                            "length": "100%",
+                            "weight": "1px",
+                            "direction": "horizontal"
+                          },
+                          "children": []
+                        },
+                        {
+                          "type": "CardFooter",
+                          "props": {},
+                          "children": [
+                            {
+                              "type": "VStack",
+                              "props": {
+                                "alignX": "center"
+                              },
+                              "children": [
+                                {
+                                  "type": "Button",
+                                  "props": {
+                                    "variant": "primary",
+                                    "text": "Subscribe",
+                                    "aria-label": "Subscribe to Professional Plan"
+                                  },
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

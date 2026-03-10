@@ -1,0 +1,37 @@
+{
+  "runName": "2026-03-10-11-36-30",
+  "scores": {
+    "averageCsat": 8,
+    "successRate": 1
+  },
+  "topRecommendations": [
+    "Provide clear and distinct labels for each card to facilitate easy navigation and understanding of plan differences.",
+    "Implement ARIA attributes or other accessibility features to ensure screen readers can effectively convey the structure and purpose of each card and button.",
+    "Emphasize the primary call-to-action for each plan to reduce friction",
+    "Use clear and concise headings for each section of the cards to improve clarity",
+    "Consider using a more prominent button variant for the plan selection to guide the user's attention",
+    "Provide an explicit and prominent call-to-action for the free plan",
+    "Consider separate and clear actions for each plan to reduce confusion",
+    "Use more detailed and explicit helper text to clarify the implications of each choice"
+  ],
+  "topFrictionPoints": [
+    "The grid layout of cards may cause navigation issues for screen-reader-reliant users without clear grouping or separator elements.",
+    "Similar button labels (e.g., 'Go to Builder' and 'Subscribe') across different plans may cause confusion.",
+    "The 'Go to Builder' button on the Free plan may cause confusion as it does not directly relate to the plan selection task",
+    "The buttons on the cards have a 'secondary' variant which may not be prominent enough for a busy mobile-first user",
+    "The dense list of features in the CardBody may cause cognitive load for Sam Rushed",
+    "No clear call-to-action for first-time users to start with the free plan",
+    "Similar button labels for different plans (Go to Builder vs Subscribe)",
+    "no clear call to action on pricing page"
+  ],
+  "topConfusionPoints": [
+    "The meaning of 'Go to Builder' vs 'Subscribe' can be inferred but may not be immediately clear without additional context or visual cues.",
+    "The difference between the plans is not immediately clear due to the amount of information presented",
+    "The CardHeader and CardBody do not have clear headings to differentiate them from the rest of the content",
+    "The difference between free and paid plans is somewhat detailed but could be more explicit for cautious users",
+    "No explicit statement about what happens after clicking 'Subscribe' or 'Go to Builder'",
+    "no indication of potential add-on costs or fees",
+    "The 'Free' plan's features are not clearly distinguished from the paid plans",
+    "The 'UI patterns & guidelines' and 'per-component guidelines' features may require additional explanation for clarity"
+  ]
+}
