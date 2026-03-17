@@ -1,0 +1,31 @@
+{
+  "persona": {
+    "id": "skeptical-security-buyer",
+    "name": "Devin Guard",
+    "type": "User",
+    "role": "Trust-sensitive buyer"
+  },
+  "task": "Review the flow and determine whether the primary task can be completed clearly and confidently.",
+  "provider": "mock",
+  "model": "heuristic-offline",
+  "pagesReviewed": [
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json"
+  ],
+  "taskSuccess": true,
+  "csat": 7.5,
+  "frictionScore": 3,
+  "clarityScore": 8,
+  "frictionPoints": [
+    "No major friction was obvious from the artifact structure alone."
+  ],
+  "confusionPoints": [
+    "The flow does not show obvious trust or reassurance language."
+  ],
+  "recommendations": [
+    "Add clear trust and safety reassurance near sensitive actions."
+  ]
+}

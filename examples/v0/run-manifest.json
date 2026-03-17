@@ -1,0 +1,28 @@
+{
+  "runId": "iteration",
+  "projectKey": "v0",
+  "mode": "both",
+  "timestamp": "2026-03-17T04:07:10.974Z",
+  "summaryPath": "critique/summary.json",
+  "scoresPath": "critique/scores.json",
+  "reportPaths": [
+    "critique/json/access-needs-screen-reader.json",
+    "critique/json/accessibility-hat.json",
+    "critique/json/busy-mobile-parent.json",
+    "critique/json/careful-first-time-user.json",
+    "critique/json/cost-conscious-impatient.json",
+    "critique/json/design-system-hat.json",
+    "critique/json/engineering-hat.json",
+    "critique/json/international-non-native-reader.json",
+    "critique/json/power-user-operator.json",
+    "critique/json/product-manager-hat.json",
+    "critique/json/skeptical-security-buyer.json",
+    "critique/json/time-poor-manager.json",
+    "critique/json/trust-and-safety-hat.json",
+    "critique/json/ux-researcher-hat.json"
+  ],
+  "loopSummaryPaths": [
+    "iteration/loop-1/summary.json",
+    "iteration/loop-2/summary.json"
+  ]
+}

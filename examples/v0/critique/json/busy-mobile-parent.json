@@ -1,0 +1,31 @@
+{
+  "persona": {
+    "id": "busy-mobile-parent",
+    "name": "Sam Rushed",
+    "type": "User",
+    "role": "Busy mobile-first multitasker"
+  },
+  "task": "Review the flow and determine whether the primary task can be completed clearly and confidently.",
+  "provider": "mock",
+  "model": "heuristic-offline",
+  "pagesReviewed": [
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json"
+  ],
+  "taskSuccess": true,
+  "csat": 7.5,
+  "frictionScore": 3,
+  "clarityScore": 8,
+  "frictionPoints": [
+    "A dense card-heavy layout may feel crowded on smaller screens."
+  ],
+  "confusionPoints": [
+    "No major confusion point was obvious from the artifact structure alone."
+  ],
+  "recommendations": [
+    "Check whether screen density remains manageable on mobile."
+  ]
+}

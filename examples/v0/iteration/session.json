@@ -1,0 +1,40 @@
+{
+  "critiqueRun": "current",
+  "provider": "mock",
+  "model": "heuristic-offline",
+  "loops": [
+    {
+      "loopNumber": 1,
+      "summary": "Loop 1 focuses on the strongest critique themes and preserves the current overall flow.",
+      "changes": [
+        "Loop 1 change 1: The flow appears structurally coherent at a high level; validate this with deeper review.",
+        "Loop 1 change 2: Check whether screen density remains manageable on mobile.",
+        "Loop 1 change 3: Add clear trust and safety reassurance near sensitive actions."
+      ],
+      "retained": [
+        "Preserve the page order and existing component structure where possible."
+      ],
+      "risks": [
+        "Updated copy and hierarchy should be reviewed against the original product intent.",
+        "Generated changes still need human verification before replacing a saved version."
+      ]
+    },
+    {
+      "loopNumber": 2,
+      "summary": "Loop 2 focuses on the strongest critique themes and preserves the current overall flow.",
+      "changes": [
+        "Loop 2 change 1: The flow appears structurally coherent at a high level; validate this with deeper review.",
+        "Loop 2 change 2: Check whether screen density remains manageable on mobile.",
+        "Loop 2 change 3: Add clear trust and safety reassurance near sensitive actions."
+      ],
+      "retained": [
+        "Loop 1 change 1: The flow appears structurally coherent at a high level; validate this with deeper review.",
+        "Loop 1 change 2: Check whether screen density remains manageable on mobile."
+      ],
+      "risks": [
+        "Updated copy and hierarchy should be reviewed against the original product intent.",
+        "Generated changes still need human verification before replacing a saved version."
+      ]
+    }
+  ]
+}

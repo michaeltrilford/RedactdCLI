@@ -1,6 +1,6 @@
 import path from 'node:path';
-import { readdir } from 'node:fs/promises';
-import { ensureDir, readJson, writeJson, writeText } from './fs-utils.js';
+import { access, readdir, rm } from 'node:fs/promises';
+import { ensureDir, readJson, writeJson } from './fs-utils.js';
 
 function serializePage(fileName, canvasChildren) {
   return {
@@ -18,23 +18,6 @@ function serializePage(fileName, canvasChildren) {
   };
 }
 
-function iterationMarkdown(loop) {
-  return `# Loop ${loop.loopNumber}
-
-Summary
-${loop.summary}
-
-Changes
-${loop.changes.map((item) => `- ${item}`).join('\n')}
-
-Retained
-${loop.retained.map((item) => `- ${item}`).join('\n')}
-
-Risks
-${loop.risks.map((item) => `- ${item}`).join('\n')}
-`;
-}
-
 function dedupe(items) {
   return [...new Set(items.filter(Boolean))];
 }
@@ -43,17 +26,36 @@ export async function listCritiqueRuns(projectPath) {
   const critiqueRoot = path.join(projectPath, 'critique');
   try {
     const entries = await readdir(critiqueRoot, { withFileTypes: true });
-    return entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .sort((a, b) => b.localeCompare(a));
+    const runs = [];
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name === 'json' || entry.name === 'md') continue;
+
+      const hasSummary = await access(path.join(critiqueRoot, entry.name, 'summary.json'))
+        .then(() => true)
+        .catch(() => false);
+
+      if (hasSummary) {
+        runs.push(entry.name);
+      }
+    }
+    runs.sort((a, b) => b.localeCompare(a));
+
+    if (entries.some((entry) => entry.isFile() && entry.name === 'summary.json')) {
+      return ['current', ...runs];
+    }
+
+    return runs;
   } catch {
     return [];
   }
 }
 
 export async function loadCritiqueRun(projectPath, runName) {
-  const runDir = path.join(projectPath, 'critique', runName);
+  const runDir =
+    !runName || runName === 'current'
+      ? path.join(projectPath, 'critique')
+      : path.join(projectPath, 'critique', runName);
   const summary = await readJson(path.join(runDir, 'summary.json'));
   const scores = await readJson(path.join(runDir, 'scores.json'));
   const jsonDir = path.join(runDir, 'json');
@@ -112,10 +114,19 @@ function normalizeIterationResult(result, loopNumber, fallbackProject) {
 }
 
 export async function runIterationSession({ project, critique, provider, loops, outputRoot }) {
-  const sessionDir = path.join(
-    outputRoot,
-    new Date().toISOString().slice(0, 19).replace('T', '-').replace(/:/g, '-')
-  );
+  const sessionDir = outputRoot;
+  await ensureDir(sessionDir);
+
+  const existingEntries = await readdir(sessionDir, { withFileTypes: true }).catch(() => []);
+  for (const entry of existingEntries) {
+    if (
+      entry.isDirectory() &&
+      (/^loop-\d+$/.test(entry.name) || /^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$/.test(entry.name))
+    ) {
+      await rm(path.join(sessionDir, entry.name), { recursive: true, force: true });
+    }
+  }
+
   await ensureDir(sessionDir);
   await writeJson(path.join(sessionDir, 'source-critique.json'), {
     runName: critique.runName,
@@ -143,7 +154,6 @@ export async function runIterationSession({ project, critique, provider, loops, 
     await ensureDir(designDir);
 
     await writeJson(path.join(loopDir, 'summary.json'), result);
-    await writeText(path.join(loopDir, 'summary.md'), iterationMarkdown(result));
 
     for (const page of result.pages) {
       await writeJson(path.join(designDir, page.fileName), serializePage(page.fileName, page.canvasChildren));

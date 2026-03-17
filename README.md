@@ -13,7 +13,7 @@ It reads saved version folders from disk, runs synthetic persona critique, and c
 - critiques saved Redactd page JSON with built-in personas
 - saves critique output locally inside each version folder
 - generates iteration loops from existing critique data
-- writes local dashboards and structured JSON/Markdown artifacts
+- writes local dashboards and structured JSON artifacts
 
 ## Modes
 
@@ -48,14 +48,8 @@ Each version folder is the working unit. Design files and feedback stay grouped 
 From the repo root:
 
 ```bash
-node ./src/cli.js
-```
-
-Or directly:
-
-```bash
-node ./src/cli.js critique /path/to/project/v1 --provider mock
-node ./src/cli.js iterate /path/to/project/v1 --provider openai
+npm install
+npm start
 ```
 
 ## License

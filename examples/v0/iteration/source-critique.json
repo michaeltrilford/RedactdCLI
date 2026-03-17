@@ -1,0 +1,20 @@
+{
+  "runName": "current",
+  "scores": {
+    "averageCsat": 7.3,
+    "successRate": 1
+  },
+  "topRecommendations": [
+    "The flow appears structurally coherent at a high level; validate this with deeper review.",
+    "Check whether screen density remains manageable on mobile.",
+    "Add clear trust and safety reassurance near sensitive actions."
+  ],
+  "topFrictionPoints": [
+    "No major friction was obvious from the artifact structure alone.",
+    "A dense card-heavy layout may feel crowded on smaller screens."
+  ],
+  "topConfusionPoints": [
+    "No major confusion point was obvious from the artifact structure alone.",
+    "The flow does not show obvious trust or reassurance language."
+  ]
+}

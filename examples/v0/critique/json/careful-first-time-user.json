@@ -1,0 +1,29 @@
+{
+  "persona": {
+    "id": "careful-first-time-user",
+    "name": "Elena Newcomer",
+    "type": "User",
+    "role": "First-time user"
+  },
+  "task": "Review the flow and determine whether the primary task can be completed clearly and confidently.",
+  "provider": "mock",
+  "model": "heuristic-offline",
+  "pagesReviewed": [
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json",
+    "pricing-page.json"
+  ],
+  "taskSuccess": true,
+  "csat": 7.5,
+  "frictionScore": 3,
+  "clarityScore": 8,
+  "frictionPoints": [
+    "No major friction was obvious from the artifact structure alone."
+  ],
+  "confusionPoints": [
+    "No major confusion point was obvious from the artifact structure alone."
+  ],
+  "recommendations": []
+}

@@ -5,6 +5,7 @@ import os from 'node:os';
 import { evaluatePersona } from './evaluator.js';
 import { createColors } from './colors.js';
 import { listCritiqueRuns, loadCritiqueRun, runIterationSession } from './iteration.js';
+import { writeRunManifest } from './run-manifest.js';
 import { filterPersonaIdsByScope, loadPersonas } from './personas.js';
 import { passwordPrompt, pathPrompt, selectPrompt } from './interactive.js';
 import { ensureDir, writeJson } from './fs-utils.js';
@@ -32,7 +33,7 @@ Providers
 
 Path notes
   ~ means your home folder.
-  Example: ~/Documents/Redactd
+  Example: ~/Documents/Redactd-Design-Loop
 `);
 }
 
@@ -122,17 +123,76 @@ function isVersionFolderName(name) {
   return /^v\d+$/i.test(name);
 }
 
-function compareVersionNamesDescending(a, b) {
-  return Number.parseInt(b.slice(1), 10) - Number.parseInt(a.slice(1), 10);
+function isValidFolderName(name) {
+  if (!name || name === '.' || name === '..') return false;
+  return !/[\\/]/.test(name);
+}
+
+function compareVersionNames(a, b) {
+  const aIsNumeric = isVersionFolderName(a);
+  const bIsNumeric = isVersionFolderName(b);
+
+  if (aIsNumeric && bIsNumeric) {
+    return Number.parseInt(b.slice(1), 10) - Number.parseInt(a.slice(1), 10);
+  }
+
+  if (aIsNumeric) return -1;
+  if (bIsNumeric) return 1;
+  return a.localeCompare(b);
+}
+
+async function hasVersionWorkspaceMarkers(folderPath) {
+  return (
+    (await pathExists(path.join(folderPath, 'critique'))) ||
+    (await pathExists(path.join(folderPath, 'iteration')))
+  );
+}
+
+async function hasDirectJsonFiles(folderPath) {
+  try {
+    const entries = await readdir(folderPath, { withFileTypes: true });
+    return entries.some((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'));
+  } catch {
+    return false;
+  }
+}
+
+function nextNumericVersionName(versionNames) {
+  const numericNames = versionNames.filter(isVersionFolderName);
+  const nextNumber =
+    numericNames.length === 0
+      ? 0
+      : Math.max(...numericNames.map((name) => Number.parseInt(name.slice(1), 10))) + 1;
+  return `v${nextNumber}`;
+}
+
+function suggestCustomVersionName(versionNames) {
+  let index = 1;
+  for (;;) {
+    const candidate = `design-${index}`;
+    if (!versionNames.includes(candidate)) {
+      return candidate;
+    }
+    index += 1;
+  }
 }
 
 async function listVersionFolders(projectRoot) {
   try {
     const entries = await readdir(projectRoot, { withFileTypes: true });
-    return entries
-      .filter((entry) => entry.isDirectory() && isVersionFolderName(entry.name))
-      .map((entry) => entry.name)
-      .sort(compareVersionNamesDescending);
+    const versionNames = [];
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name.startsWith('.')) continue;
+
+      const folderPath = path.join(projectRoot, entry.name);
+      if ((await hasVersionWorkspaceMarkers(folderPath)) || (await hasDirectJsonFiles(folderPath))) {
+        versionNames.push(entry.name);
+      }
+    }
+
+    return versionNames.sort(compareVersionNames);
   } catch {
     return [];
   }
@@ -218,6 +278,7 @@ async function scaffoldVersionFolder(versionPath) {
 }
 
 async function chooseVersionFolder(colors, projectRoot, versionNames) {
+  const nextVersionName = nextNumericVersionName(versionNames);
   const selected = await selectPrompt({
     colors,
     title: 'Choose a version',
@@ -230,8 +291,13 @@ async function chooseVersionFolder(colors, projectRoot, versionNames) {
       })),
       {
         value: '__create__',
-        label: 'Create new version',
-        description: 'Start a fresh version folder in this project.'
+        label: `Create ${nextVersionName}`,
+        description: 'Start a fresh numeric version folder in this project.'
+      },
+      {
+        value: '__create_custom__',
+        label: 'Create custom version',
+        description: 'Choose your own folder name (for example: design-signup).'
       },
       {
         value: '__back__',
@@ -246,15 +312,40 @@ async function chooseVersionFolder(colors, projectRoot, versionNames) {
   }
 
   if (selected === '__create__') {
-    const nextNumber =
-      versionNames.length === 0
-        ? 0
-        : Math.max(...versionNames.map((name) => Number.parseInt(name.slice(1), 10))) + 1;
-    const nextVersionName = `v${nextNumber}`;
     const versionPath = path.join(projectRoot, nextVersionName);
     await scaffoldVersionFolder(versionPath);
     console.log(colors.success(`Created ${nextVersionName} at ${versionPath}`));
     return { action: 'selected', versionPath };
+  }
+
+  if (selected === '__create_custom__') {
+    for (;;) {
+      const suggestedName = suggestCustomVersionName(versionNames);
+      const customName = (
+        await pathPrompt({
+          colors,
+          title: 'Create custom version',
+          subtitle: 'Enter a folder name for this version workspace.',
+          label: 'Version name',
+          defaultValue: suggestedName
+        })
+      ).trim();
+
+      if (!isValidFolderName(customName)) {
+        console.log(colors.warning('Invalid folder name. Avoid slashes and empty values.'));
+        continue;
+      }
+
+      const versionPath = path.join(projectRoot, customName);
+      if (await pathExists(versionPath)) {
+        console.log(colors.warning(`Folder already exists: ${versionPath}`));
+        continue;
+      }
+
+      await scaffoldVersionFolder(versionPath);
+      console.log(colors.success(`Created ${customName} at ${versionPath}`));
+      return { action: 'selected', versionPath };
+    }
   }
 
   return { action: 'selected', versionPath: selected };
@@ -284,7 +375,11 @@ async function ensureProjectFolder(colors, projectPath) {
   }
 
   const projectName = path.basename(projectPath);
-  if (isVersionFolderName(projectName)) {
+  if (
+    isVersionFolderName(projectName) ||
+    (await hasVersionWorkspaceMarkers(projectPath)) ||
+    (await hasDirectJsonFiles(projectPath))
+  ) {
     await ensureDir(path.join(projectPath, 'critique'));
     await ensureDir(path.join(projectPath, 'iteration'));
     return projectPath;
@@ -473,10 +568,18 @@ async function chooseCritiqueRun(colors, projectPath) {
     title: 'Choose a critique',
     subtitle: 'Iteration uses a saved critique as its source input.',
     options: [
-      ...runNames.map((runName) => ({
-        value: runName,
-        label: runName
-      })),
+      ...runNames.map((runName) =>
+        runName === 'current'
+          ? {
+              value: runName,
+              label: 'Latest critique',
+              description: path.join(projectPath, 'critique')
+            }
+          : {
+              value: runName,
+              label: runName
+            }
+      ),
       {
         value: '__back__',
         label: 'Back',
@@ -514,8 +617,8 @@ async function chooseIterationDepth(colors) {
 }
 
 async function chooseProjectPath(colors) {
-  const documentsRedactd = '~/Documents/Redactd';
-  const iCloudRedactd = '~/iCloud/Redactd';
+  const documentsRedactd = '~/Documents/Redactd-Design-Loop';
+  const iCloudRedactd = '~/iCloud/Redactd-Design-Loop';
 
   const selected = await selectPrompt({
     colors,
@@ -528,11 +631,11 @@ async function chooseProjectPath(colors) {
       },
       {
         value: documentsRedactd,
-        label: 'Documents (~/Documents/Redactd)'
+        label: 'Documents (~/Documents/Redactd-Design-Loop)'
       },
       {
         value: iCloudRedactd,
-        label: 'iCloud (~/iCloud/Redactd)'
+        label: 'iCloud (~/iCloud/Redactd-Design-Loop)'
       },
       {
         value: '__custom__',
@@ -637,6 +740,11 @@ async function runCritique(projectPathArg, flags) {
 
     await ensureDir(path.join(projectPath, 'critique'));
     const runDir = await writeRun(project, reports, path.join(projectPath, 'critique'));
+    await writeRunManifest({
+      projectPath,
+      mode: 'critique',
+      critiqueRunDir: runDir,
+    });
 
     console.log(colors.success(`Validated ${project.pages.length} page files.`));
     console.log(colors.success(`Evaluated ${reports.length} personas.`));
@@ -659,9 +767,14 @@ async function runIterate(projectPathArg, flags, selectedRunName = null, selecte
 
   let critiqueRunName = selectedRunName;
   if (!critiqueRunName) {
-    critiqueRunName = await chooseCritiqueRun(colors, projectPath);
-    if (critiqueRunName === '__back__') {
-      return { action: 'back' };
+    const hasFlatCritique = await pathExists(path.join(projectPath, 'critique', 'summary.json'));
+    if (hasFlatCritique) {
+      critiqueRunName = 'current';
+    } else {
+      critiqueRunName = await chooseCritiqueRun(colors, projectPath);
+      if (critiqueRunName === '__back__') {
+        return { action: 'back' };
+      }
     }
   }
 
@@ -678,7 +791,10 @@ async function runIterate(projectPathArg, flags, selectedRunName = null, selecte
 
   console.log(colors.accent('Redactd CLI'));
   console.log(colors.muted(`Project: ${projectPath}`));
-  console.log(colors.muted(`Critique: ${critique.runName}`));
+  const critiqueLabel = critique.runName === 'current' ? null : critique.runName;
+  if (critiqueLabel) {
+    console.log(colors.muted(`Critique: ${critiqueLabel}`));
+  }
   console.log(colors.muted(`Provider: ${provider.name}${provider.model ? ` (${provider.model})` : ''}`));
 
   const result = await runIterationSession({
@@ -689,7 +805,18 @@ async function runIterate(projectPathArg, flags, selectedRunName = null, selecte
     outputRoot: path.join(projectPath, 'iteration')
   });
 
-  console.log(colors.success(`Loaded critique ${critique.runName}.`));
+  await writeRunManifest({
+    projectPath,
+    mode: 'both',
+    critiqueRunDir: critique.runDir,
+    iterationSessionDir: result.sessionDir,
+  });
+
+  if (critiqueLabel) {
+    console.log(colors.success(`Loaded critique ${critiqueLabel}.`));
+  } else {
+    console.log(colors.success('Loaded critique.'));
+  }
   console.log(colors.success(`Saved ${result.loops.length} iteration loops.`));
   console.log(colors.info(`Output written to ${result.sessionDir}`));
   return { action: 'completed', sessionDir: result.sessionDir };
@@ -742,7 +869,11 @@ async function main() {
         if (critiqueResult?.action === 'back') {
           continue;
         }
-        const runName = critiqueResult?.runDir ? path.basename(critiqueResult.runDir) : null;
+        const runName = critiqueResult?.runDir
+          ? path.basename(critiqueResult.runDir) === 'critique'
+            ? 'current'
+            : path.basename(critiqueResult.runDir)
+          : null;
         result = await runIterate(projectPath, baseFlags, runName, 2);
       }
 

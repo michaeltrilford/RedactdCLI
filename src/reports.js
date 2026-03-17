@@ -1,4 +1,5 @@
 import path from "node:path";
+import { readdir, rm } from "node:fs/promises";
 import { ensureDir, writeJson, writeText } from "./fs-utils.js";
 
 const DESIGN_SYSTEM_CSS_URLS = [
@@ -14,52 +15,6 @@ const COMPONENT_FLASH_GUARD_CSS = `
     visibility: hidden;
   }
 `;
-
-function nowStamp() {
-  return new Date()
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", "-")
-    .replace(/:/g, "-");
-}
-
-function reportMarkdown(report) {
-  return `# ${report.persona.name}
-
-Type
-${report.persona.type}
-
-Role
-${report.persona.role}
-
-Task
-${report.task}
-
-Task Success
-${report.taskSuccess ? "true" : "false"}
-
-CSAT
-${report.csat}
-
-Friction Score
-${report.frictionScore}
-
-Clarity Score
-${report.clarityScore}
-
-Pages Reviewed
-${report.pagesReviewed.join(", ")}
-
-Friction Points
-${report.frictionPoints.map((item) => `- ${item}`).join("\n")}
-
-Confusion Points
-${report.confusionPoints.map((item) => `- ${item}`).join("\n")}
-
-Recommendations
-${report.recommendations.map((item) => `- ${item}`).join("\n")}
-`;
-}
 
 function escapeHtml(value) {
   return String(value)
@@ -181,17 +136,11 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
                   <mui-link variant="tertiary" size="small" href="./json/${encodeURIComponent(
                     report.persona.id,
                   )}.json">JSON</mui-link>
-                  <mui-link variant="tertiary" size="small" href="./md/${encodeURIComponent(
-                    report.persona.id,
-                  )}.md">Markdown</mui-link>
                 </mui-h-stack>
                 <mui-v-stack slot="showBelow" class="links" space="var(--space-000)" alignX="stretch">
                   <mui-link variant="tertiary" size="small" href="./json/${encodeURIComponent(
                     report.persona.id,
                   )}.json">JSON</mui-link>
-                  <mui-link variant="tertiary" size="small" href="./md/${encodeURIComponent(
-                    report.persona.id,
-                  )}.md">Markdown</mui-link>
                 </mui-v-stack>
               </mui-responsive>
 
@@ -534,16 +483,23 @@ function dashboardHtml({ project, reports, summary, scores, runDirName }) {
 }
 
 export async function writeRun(project, reports, outputRoot) {
-  const runDir = path.join(outputRoot, nowStamp());
+  const runDir = outputRoot;
   const jsonDir = path.join(runDir, "json");
-  const mdDir = path.join(runDir, "md");
   await ensureDir(runDir);
+  const entries = await readdir(runDir, { withFileTypes: true }).catch(() => []);
+  for (const entry of entries) {
+    if (
+      entry.isDirectory() &&
+      (/^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$/.test(entry.name) || entry.name === "json")
+    ) {
+      await rm(path.join(runDir, entry.name), { recursive: true, force: true });
+    }
+  }
+
   await ensureDir(jsonDir);
-  await ensureDir(mdDir);
 
   for (const report of reports) {
     await writeJson(path.join(jsonDir, `${report.persona.id}.json`), report);
-    await writeText(path.join(mdDir, `${report.persona.id}.md`), reportMarkdown(report));
   }
 
   const summary = {
@@ -580,7 +536,7 @@ export async function writeRun(project, reports, outputRoot) {
       reports,
       summary,
       scores,
-      runDirName: path.basename(runDir),
+      runDirName: "current",
     }),
   );
 

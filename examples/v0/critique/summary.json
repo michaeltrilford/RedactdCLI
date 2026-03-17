@@ -1,0 +1,246 @@
+{
+  "projectPath": "/Users/michaeltrilford/Github/RedactdCLI/examples/v0",
+  "pages": [
+    {
+      "fileName": "pricing-page.json",
+      "totalNodes": 51,
+      "componentCounts": {
+        "Container": 1,
+        "VStack": 11,
+        "Heading": 7,
+        "Body": 13,
+        "Grid": 1,
+        "Card": 3,
+        "CardHeader": 3,
+        "CardBody": 3,
+        "Rule": 3,
+        "CardFooter": 3,
+        "Button": 3
+      }
+    },
+    {
+      "fileName": "pricing-page.json",
+      "totalNodes": 51,
+      "componentCounts": {
+        "Container": 1,
+        "VStack": 11,
+        "Heading": 7,
+        "Body": 13,
+        "Grid": 1,
+        "Card": 3,
+        "CardHeader": 3,
+        "CardBody": 3,
+        "Rule": 3,
+        "CardFooter": 3,
+        "Button": 3
+      }
+    },
+    {
+      "fileName": "pricing-page.json",
+      "totalNodes": 51,
+      "componentCounts": {
+        "Container": 1,
+        "VStack": 11,
+        "Heading": 7,
+        "Body": 13,
+        "Grid": 1,
+        "Card": 3,
+        "CardHeader": 3,
+        "CardBody": 3,
+        "Rule": 3,
+        "CardFooter": 3,
+        "Button": 3
+      }
+    },
+    {
+      "fileName": "pricing-page.json",
+      "totalNodes": 51,
+      "componentCounts": {
+        "Container": 1,
+        "VStack": 11,
+        "Heading": 7,
+        "Body": 13,
+        "Grid": 1,
+        "Card": 3,
+        "CardHeader": 3,
+        "CardBody": 3,
+        "Rule": 3,
+        "CardFooter": 3,
+        "Button": 3
+      }
+    },
+    {
+      "fileName": "pricing-page.json",
+      "totalNodes": 51,
+      "componentCounts": {
+        "Container": 1,
+        "VStack": 11,
+        "Heading": 7,
+        "Body": 13,
+        "Grid": 1,
+        "Card": 3,
+        "CardHeader": 3,
+        "CardBody": 3,
+        "Rule": 3,
+        "CardFooter": 3,
+        "Button": 3
+      }
+    }
+  ],
+  "personas": [
+    {
+      "id": "accessibility-hat",
+      "name": "Accessibility Hat",
+      "type": "Stakeholder Hat",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.2,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "design-system-hat",
+      "name": "Design System Hat",
+      "type": "Stakeholder Hat",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.2,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "engineering-hat",
+      "name": "Engineering Hat",
+      "type": "Stakeholder Hat",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.2,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "product-manager-hat",
+      "name": "Product Manager Hat",
+      "type": "Stakeholder Hat",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.2,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "trust-and-safety-hat",
+      "name": "Trust and Safety Hat",
+      "type": "Stakeholder Hat",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.2,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "ux-researcher-hat",
+      "name": "UX Researcher Hat",
+      "type": "Stakeholder Hat",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.2,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "access-needs-screen-reader",
+      "name": "Priya Navigate",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.5,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "busy-mobile-parent",
+      "name": "Sam Rushed",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.5,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "careful-first-time-user",
+      "name": "Elena Newcomer",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.5,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "cost-conscious-impatient",
+      "name": "Nora Pricewatch",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "international-non-native-reader",
+      "name": "Kenji Plainlanguage",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.5,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "power-user-operator",
+      "name": "Marco Throughput",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.5,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "skeptical-security-buyer",
+      "name": "Devin Guard",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7.5,
+      "frictionScore": 3,
+      "clarityScore": 8
+    },
+    {
+      "id": "time-poor-manager",
+      "name": "Rachel Delegate",
+      "type": "User",
+      "provider": "mock",
+      "model": "heuristic-offline",
+      "taskSuccess": true,
+      "csat": 7,
+      "frictionScore": 3,
+      "clarityScore": 8
+    }
+  ]
+}
